@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zobot — Premium Digital Banking Dashboard</title>
+  <meta name="description"
+    content="Zobot premium digital banking dashboard with real-time analytics, portfolio tracking, and seamless money transfers." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+  <!-- ══════════════ COSMIC BACKGROUND ══════════════ -->
+  <div class="bg-cosmos">
+    <canvas id="starfield"></canvas>
+    <div class="cosmic-circle-1"></div>
+    <div class="cosmic-circle-2"></div>
+    <div class="cosmic-circle-3"></div>
+  </div>
+
+  <!-- ══════════════ STICKY NAVBAR ══════════════ -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <div class="shield-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <path d="M16 2L4 8v8c0 7.73 5.12 14.96 12 16 6.88-1.04 12-8.27 12-16V8L16 2z" fill="url(#shieldGrad)" />
+            <path d="M14 17l-3-3 1.4-1.4L14 14.2l5.6-5.6L21 10l-7 7z" fill="#fff" />
+            <defs>
+              <linearGradient id="shieldGrad" x1="4" y1="2" x2="28" y2="26" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#3b82f6" />
+                <stop offset="1" stop-color="#1d4ed8" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="brand-text">Zobot</span>
+      </div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#" class="active" data-nav="home" data-i18n="nav_home">Home</a></li>
+        <li><a href="#" data-nav="transactions" data-i18n="nav_transactions">Transactions</a></li>
+        <li><a href="#" data-modal="transferModal" data-i18n="nav_transfer">Transfer</a></li>
+        <li><a href="#" data-nav="invest" data-i18n="nav_invest">Invest</a></li>
+        <li><a href="#" data-nav="loans" data-i18n="nav_loans">Loans</a></li>
+        <li><a href="#" data-nav="bills" data-i18n="nav_bills">Bills</a></li>
+        <li><a href="#" data-nav="assistant" data-i18n="nav_assistant">Assistant</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <span class="notif-badge" id="notifBadge">2</span>
+        </button>
+        <div class="lang-menu-container" style="position:relative;">
+          <button class="icon-btn" id="langBtn" aria-label="Language">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+              </path>
+            </svg>
+          </button>
+          <div class="profile-dropdown" id="langDropdown" style="right:-40px;">
+            <div class="prof-header"><strong>LANGUAGE</strong><span>Select your preference</span></div>
+            <a href="#" class="prof-link lang-option active" data-lang="en">English</a>
+            <a href="#" class="prof-link lang-option" data-lang="hi">हिंदी (Hindi)</a>
+            <a href="#" class="prof-link lang-option" data-lang="te">తెలుగు (Telugu)</a>
+            <a href="#" class="prof-link lang-option" data-lang="bi">Bilingual (EN + Local)</a>
+          </div>
+        </div>
+        <button class="icon-btn" id="themeToggle" aria-label="Toggle theme">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" class="theme-icon">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+        </button>
+        <div class="profile-menu-container">
+          <button class="avatar-btn" id="profileBtn"><img src="https://i.pravatar.cc/150?u=jane"
+              alt="Profile" /></button>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="prof-header"><strong>JANE DOE</strong><span>jane@example.com</span></div>
+            <a href="#" class="prof-link">My Profile</a>
+            <a href="#" class="prof-link">Settings</a>
+            <hr class="prof-divider">
+            <a href="login.html" class="prof-link text-danger">Log Out</a>
+          </div>
+        </div>
+        <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══════════════ MAIN CONTENT ══════════════ -->
+  <main class="main-content">
+
+    <!-- ═══════ PAGE: HOME ═══════ -->
+    <div class="page-section active" data-page="home">
+
+      <!-- ── HERO SECTION ── -->
+      <section class="hero-section reveal" id="heroSection">
+        <div class="hero-left">
+          <p class="greeting-sub" data-i18n="greeting">Good Evening</p>
+          <h1 class="greeting">Welcome back, <span class="gradient-text">Akshay!</span></h1>
+          <p class="greeting-desc">Your finances are looking great today. Let's keep the momentum going.</p>
+          <!-- 3D CREDIT CARD -->
+          <div class="credit-card-container" id="creditCardContainer">
+            <div class="credit-card" id="creditCard">
+              <div class="card-face card-front">
+                <div class="card-shine"></div>
+                <div class="card-top-row"><span class="card-bank-name">Zobot Bank</span>
+                  <svg class="card-contactless" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff"
+                    stroke-width="1.5">
+                    <path d="M8.5 16.5a5 5 0 0 1 0-9" />
+                    <path d="M5 19a9 9 0 0 1 0-14" />
+                    <path d="M2 21.5a13 13 0 0 1 0-19" />
+                  </svg>
+                </div>
+                <div class="card-chip">
+                  <div class="chip-lines"><span></span><span></span><span></span><span></span></div>
+                </div>
+                <div class="card-number"><span>4532</span><span>••••</span><span>••••</span><span>1234</span></div>
+                <div class="card-bottom-row">
+                  <div><span class="card-label">Card Holder</span><span class="card-value">AKSHAY SAHARSH</span></div>
+                  <div><span class="card-label">Expires</span><span class="card-value">09/28</span></div>
+                  <div class="card-logo"><svg width="48" height="30" viewBox="0 0 48 30">
+                      <circle cx="18" cy="15" r="12" fill="#eb001b" opacity="0.9" />
+                      <circle cx="30" cy="15" r="12" fill="#f79e1b" opacity="0.9" />
+                      <path d="M24 5.4a12 12 0 0 1 0 19.2 12 12 0 0 1 0-19.2z" fill="#ff5f00" />
+                    </svg></div>
+                </div>
+              </div>
+              <div class="card-face card-back">
+                <div class="card-magnetic-strip"></div>
+                <div class="card-cvv-area">
+                  <span class="card-label">CVV</span>
+                  <span class="cvv-value" id="cvvValue">•••</span>
+                  <button class="cvv-toggle" id="cvvToggle" aria-label="Show CVV"><svg width="18" height="18"
+                      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg></button>
+                </div>
+                <div class="card-back-bottom"><span class="card-value">Customer Service: 1800-ZOBOT</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-right">
+          <h2 class="section-title">My Accounts</h2>
+          <div class="account-cards-stack">
+            <div class="account-card" data-accent="success" id="savingsCard">
+              <div class="acc-card-header">
+                <div class="acc-icon savings-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16" />
+                    <line x1="3" y1="21" x2="21" y2="21" />
+                    <path d="M9 7h1m4 0h1M9 11h1m4 0h1M9 15h1m4 0h1" />
+                  </svg></div>
+                <span class="acc-type">Savings Account</span>
+                <button class="eye-toggle" data-target="savingsBalance" aria-label="Toggle balance"><svg width="18"
+                    height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg></button>
+              </div>
+              <div class="acc-balance-row"><span class="acc-balance" id="savingsBalance"
+                  data-amount="₹1,25,430.00">₹•••••</span></div>
+              <div class="acc-footer"><span class="acc-acct-no">A/C •••• 4521</span><span
+                  class="acc-change positive">+₹12,400 this month</span></div>
+              <div class="acc-card-glow"></div>
+            </div>
+            <div class="account-card" data-accent="primary" id="currentCard">
+              <div class="acc-card-header">
+                <div class="acc-icon current-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="5" width="20" height="14" rx="2" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                  </svg></div>
+                <span class="acc-type">Current Account</span>
+                <button class="eye-toggle" data-target="currentBalance" aria-label="Toggle balance"><svg width="18"
+                    height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg></button>
+              </div>
+              <div class="acc-balance-row"><span class="acc-balance" id="currentBalance"
+                  data-amount="₹2,34,567.50">₹•••••</span></div>
+              <div class="acc-footer"><span class="acc-acct-no">A/C •••• 7823</span><span
+                  class="acc-change positive">+₹34,200 this month</span></div>
+              <div class="acc-card-glow"></div>
+            </div>
+            <div class="account-card" data-accent="warning" id="fdCard">
+              <div class="acc-card-header">
+                <div class="acc-icon fd-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                  </svg></div>
+                <span class="acc-type">Fixed Deposit</span>
+                <button class="eye-toggle" data-target="fdBalance" aria-label="Toggle balance"><svg width="18"
+                    height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg></button>
+              </div>
+              <div class="acc-balance-row"><span class="acc-balance" id="fdBalance"
+                  data-amount="₹5,00,000.00">₹•••••</span></div>
+              <div class="acc-footer"><span class="acc-acct-no">FD #DA-2024-0891</span><span
+                  class="acc-change positive">7.25% p.a.</span></div>
+              <div class="acc-card-glow"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── QUICK ACTIONS ── -->
+      <section class="quick-actions-section reveal" id="quickActions">
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="actions-grid">
+          <button class="action-btn" data-modal="transferModal">
+            <div class="action-circle"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg></div><span data-i18n="quick_send">Send Money</span>
+          </button>
+          <button class="action-btn" data-modal="billModal">
+            <div class="action-circle"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <rect x="1" y="4" width="22" height="16" rx="2" />
+                <line x1="1" y1="10" x2="23" y2="10" />
+              </svg></div><span data-i18n="quick_pay">Pay Bills</span>
+          </button>
+          <button class="action-btn" data-modal="billModal">
+            <div class="action-circle"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <rect x="5" y="2" width="14" height="20" rx="2" />
+                <line x1="12" y1="18" x2="12.01" y2="18" />
+              </svg></div><span>Recharge</span>
+          </button>
+          <button class="action-btn" data-modal="transferModal">
+            <div class="action-circle"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                <circle cx="12" cy="13" r="4" />
+              </svg></div><span>Scan & Pay</span>
+          </button>
+          <button class="action-btn" data-nav="invest">
+            <div class="action-circle"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+                <polyline points="16 7 22 7 22 13" />
+              </svg></div><span data-i18n="quick_invest">Invest</span>
+          </button>
+          <button class="action-btn" data-nav="loans">
+            <div class="action-circle"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <line x1="12" y1="1" x2="12" y2="23" />
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg></div><span data-i18n="quick_loans">Loans</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ── ANALYTICS ── -->
+      <section class="analytics-section reveal" id="analyticsSection">
+        <div class="analytics-grid">
+          <div class="analytics-card spending-card">
+            <div class="analytics-card-header">
+              <h2 class="section-title">Spending Breakdown</h2>
+              <select class="period-select" id="spendingPeriod">
+                <option value="month">This Month</option>
+                <option value="week">This Week</option>
+                <option value="year">This Year</option>
+              </select>
+            </div>
+            <div class="chart-container"><canvas id="spendingChart"></canvas>
+              <div class="chart-center-label"><span class="chart-total">₹32,450</span><span
+                  class="chart-total-label">Total Spent</span></div>
+            </div>
+            <div class="chart-legend" id="spendingLegend"></div>
+          </div>
+          <div class="analytics-card portfolio-card">
+            <div class="analytics-card-header">
+              <h2 class="section-title">Investment Portfolio</h2><span class="portfolio-badge positive">+12.4%</span>
+            </div>
+            <div class="portfolio-value-row"><span class="portfolio-amount">₹2,45,670</span><span
+                class="portfolio-return positive"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+                  <polyline points="16 7 22 7 22 13" />
+                </svg>Returns: ₹28,450</span></div>
+            <div class="portfolio-cards">
+              <div class="portfolio-item">
+                <div class="port-icon stocks"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+                  </svg></div>
+                <div class="port-info"><span class="port-name">Stocks</span><span class="port-val">₹1,20,000</span>
+                </div><span class="port-change positive">+8.2%</span>
+              </div>
+              <div class="portfolio-item">
+                <div class="port-icon mutual"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M8 12h8M12 8v8" />
+                  </svg></div>
+                <div class="port-info"><span class="port-name">Mutual Funds</span><span class="port-val">₹85,670</span>
+                </div><span class="port-change positive">+15.1%</span>
+              </div>
+              <div class="portfolio-item">
+                <div class="port-icon gold"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                  </svg></div>
+                <div class="port-info"><span class="port-name">Digital Gold</span><span class="port-val">₹40,000</span>
+                </div><span class="port-change positive">+18.7%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── RECENT TRANSACTIONS ── -->
+      <section class="transactions-section reveal" id="transactionsSection">
+        <div class="analytics-card">
+          <div class="analytics-card-header">
+            <h2 class="section-title">Recent Transactions</h2><a href="#" class="view-all-link">View All →</a>
+          </div>
+          <div class="transactions-list">
+            <div class="txn-item">
+              <div class="txn-icon txn-debit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg></div>
+              <div class="txn-info"><span class="txn-name">Amazon Shopping</span><span class="txn-date">27 Feb, 2026 •
+                  3:15 PM</span></div><span class="txn-amount debit">-₹2,499</span>
+            </div>
+            <div class="txn-item">
+              <div class="txn-icon txn-credit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <path d="M18 15l-6-6-6 6" />
+                </svg></div>
+              <div class="txn-info"><span class="txn-name">Salary Credit — TCS Ltd</span><span class="txn-date">25 Feb,
+                  2026 • 9:00 AM</span></div><span class="txn-amount credit">+₹85,000</span>
+            </div>
+            <div class="txn-item">
+              <div class="txn-icon txn-debit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg></div>
+              <div class="txn-info"><span class="txn-name">Swiggy Food Order</span><span class="txn-date">26 Feb, 2026 •
+                  8:42 PM</span></div><span class="txn-amount debit">-₹456</span>
+            </div>
+            <div class="txn-item">
+              <div class="txn-icon txn-debit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg></div>
+              <div class="txn-info"><span class="txn-name">Uber Ride</span><span class="txn-date">26 Feb, 2026 • 6:30
+                  PM</span></div><span class="txn-amount debit">-₹320</span>
+            </div>
+            <div class="txn-item">
+              <div class="txn-icon txn-credit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <path d="M18 15l-6-6-6 6" />
+                </svg></div>
+              <div class="txn-info"><span class="txn-name">Freelance Payment — Upwork</span><span class="txn-date">24
+                  Feb, 2026 • 11:20 AM</span></div><span class="txn-amount credit">+₹18,500</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div><!-- end page: home -->
+
+    <!-- ═══════ PAGE: TRANSACTIONS ═══════ -->
+    <div class="page-section" data-page="transactions">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Transactions</h1>
+          <p class="page-subtitle">View and manage all your account activity</p>
+        </div>
+        <div class="page-header-actions">
+          <div class="search-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg><input type="text" placeholder="Search transactions..." id="txnSearch" /></div>
+          <select class="period-select" id="txnFilter">
+            <option>All Transactions</option>
+            <option>Credits Only</option>
+            <option>Debits Only</option>
+          </select>
+        </div>
+      </div>
+      <div class="summary-row">
+        <div class="summary-card" data-accent="success"><span class="summary-label">Total Credits</span><span
+            class="summary-value credit">+₹1,03,500</span><span class="summary-sub">This month</span></div>
+        <div class="summary-card" data-accent="danger"><span class="summary-label">Total Debits</span><span
+            class="summary-value debit">-₹38,275</span><span class="summary-sub">This month</span></div>
+        <div class="summary-card" data-accent="primary"><span class="summary-label">Net Balance</span><span
+            class="summary-value">+₹65,225</span><span class="summary-sub">This month</span></div>
+      </div>
+      <div class="analytics-card">
+        <div class="transactions-list" id="fullTxnList">
+          <div class="txn-item">
+            <div class="txn-icon txn-debit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6" />
+              </svg></div>
+            <div class="txn-info"><span class="txn-name">Amazon Shopping</span><span class="txn-date">27 Feb, 2026 •
+                3:15 PM</span></div><span class="txn-category-tag">Shopping</span><span
+              class="txn-amount debit">-₹2,499</span>
+          </div>
+          <div class="txn-item">
+            <div class="txn-icon txn-credit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="M18 15l-6-6-6 6" />
+              </svg></div>
+            <div class="txn-info"><span class="txn-name">Salary Credit — TCS Ltd</span><span class="txn-date">25 Feb,
+                2026 • 9:00 AM</span></div><span class="txn-category-tag credit-tag">Income</span><span
+              class="txn-amount credit">+₹85,000</span>
+          </div>
+          <div class="txn-item">
+            <div class="txn-icon txn-debit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6" />
+              </svg></div>
+            <div class="txn-info"><span class="txn-name">Swiggy Food Order</span><span class="txn-date">26 Feb, 2026 •
+                8:42 PM</span></div><span class="txn-category-tag">Food</span><span
+              class="txn-amount debit">-₹456</span>
+          </div>
+          <div class="txn-item">
+            <div class="txn-icon txn-debit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6" />
+              </svg></div>
+            <div class="txn-info"><span class="txn-name">Uber Ride</span><span class="txn-date">26 Feb, 2026 • 6:30
+                PM</span></div><span class="txn-category-tag">Transport</span><span
+              class="txn-amount debit">-₹320</span>
+          </div>
+          <div class="txn-item">
+            <div class="txn-icon txn-credit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="M18 15l-6-6-6 6" />
+              </svg></div>
+            <div class="txn-info"><span class="txn-name">Freelance Payment — Upwork</span><span class="txn-date">24 Feb,
+                2026 • 11:20 AM</span></div><span class="txn-category-tag credit-tag">Income</span><span
+              class="txn-amount credit">+₹18,500</span>
+          </div>
+          <div class="txn-item">
+            <div class="txn-icon txn-debit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6" />
+              </svg></div>
+            <div class="txn-info"><span class="txn-name">Netflix Subscription</span><span class="txn-date">23 Feb, 2026
+                • 12:00 AM</span></div><span class="txn-category-tag">Entertainment</span><span
+              class="txn-amount debit">-₹649</span>
+          </div>
+          <div class="txn-item">
+            <div class="txn-icon txn-debit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6" />
+              </svg></div>
+            <div class="txn-info"><span class="txn-name">Electricity Bill — Tata Power</span><span class="txn-date">22
+                Feb, 2026 • 10:30 AM</span></div><span class="txn-category-tag">Bills</span><span
+              class="txn-amount debit">-₹1,240</span>
+          </div>
+          <div class="txn-item">
+            <div class="txn-icon txn-debit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6" />
+              </svg></div>
+            <div class="txn-info"><span class="txn-name">Reliance Jio Recharge</span><span class="txn-date">20 Feb, 2026
+                • 2:15 PM</span></div><span class="txn-category-tag">Recharge</span><span
+              class="txn-amount debit">-₹299</span>
+          </div>
+          <div class="txn-item">
+            <div class="txn-icon txn-debit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6" />
+              </svg></div>
+            <div class="txn-info"><span class="txn-name">Zomato Food Order</span><span class="txn-date">19 Feb, 2026 •
+                9:10 PM</span></div><span class="txn-category-tag">Food</span><span
+              class="txn-amount debit">-₹812</span>
+          </div>
+          <div class="txn-item">
+            <div class="txn-icon txn-debit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6" />
+              </svg></div>
+            <div class="txn-info"><span class="txn-name">Flipkart Electronics</span><span class="txn-date">18 Feb, 2026
+                • 4:00 PM</span></div><span class="txn-category-tag">Shopping</span><span
+              class="txn-amount debit">-₹14,999</span>
+          </div>
+        </div>
+      </div>
+    </div><!-- end page: transactions -->
+
+    <!-- ═══════ PAGE: TRANSFER ═══════ -->
+    <div class="page-section" data-page="transfer">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Transfer Money</h1>
+          <p class="page-subtitle">Send money to anyone, instantly and securely</p>
+        </div>
+      </div>
+      <div class="transfer-page-grid">
+        <div class="analytics-card">
+          <h2 class="section-title">New Transfer</h2>
+          <div class="transfer-type-tabs"><button class="tab-btn active" data-tab="upi">UPI</button><button
+              class="tab-btn" data-tab="bank">Bank Transfer</button><button class="tab-btn" data-tab="self">Self
+              Transfer</button></div>
+          <div class="modal-form" style="margin-top:20px">
+            <div class="form-group"><label>UPI ID / Mobile Number</label><input type="text"
+                placeholder="name@upi or 9876543210" /></div>
+            <div class="form-group"><label>Amount (₹)</label><input type="number" placeholder="Enter amount"
+                value="5000" /></div>
+            <div class="form-group"><label>Note (Optional)</label><input type="text" placeholder="e.g. Rent payment" />
+            </div>
+            <div class="form-group"><label>From Account</label><select class="period-select"
+                style="width:100%;padding:12px 16px">
+                <option>Savings A/C •••• 4521 (₹1,25,430)</option>
+                <option>Current A/C •••• 7823 (₹2,34,567)</option>
+              </select></div>
+            <button class="btn-primary" style="margin-top:8px">Send ₹5,000</button>
+          </div>
+        </div>
+        <div class="analytics-card">
+          <h2 class="section-title">Recent Contacts</h2>
+          <div class="contacts-list">
+            <div class="contact-item">
+              <div class="contact-avatar" style="background:rgba(59,130,246,0.15);color:var(--electric-blue)">RS</div>
+              <div class="port-info"><span class="port-name">Rahul Sharma</span><span
+                  class="port-val">rahul@okhdfcbank</span></div><button class="btn-secondary"
+                style="padding:6px 14px;font-size:12px">Send</button>
+            </div>
+            <div class="contact-item">
+              <div class="contact-avatar" style="background:rgba(168,85,247,0.15);color:var(--purple)">PK</div>
+              <div class="port-info"><span class="port-name">Priya Kapoor</span><span
+                  class="port-val">priya.k@ybl</span></div><button class="btn-secondary"
+                style="padding:6px 14px;font-size:12px">Send</button>
+            </div>
+            <div class="contact-item">
+              <div class="contact-avatar" style="background:rgba(16,185,129,0.15);color:var(--success)">AM</div>
+              <div class="port-info"><span class="port-name">Arun Mehta</span><span class="port-val">arun.m@paytm</span>
+              </div><button class="btn-secondary" style="padding:6px 14px;font-size:12px">Send</button>
+            </div>
+            <div class="contact-item">
+              <div class="contact-avatar" style="background:rgba(236,72,153,0.15);color:var(--pink)">SG</div>
+              <div class="port-info"><span class="port-name">Sneha Gupta</span><span class="port-val">sneha@oksbi</span>
+              </div><button class="btn-secondary" style="padding:6px 14px;font-size:12px">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ PAGE: INVEST ═══════ -->
+    <div class="page-section" data-page="invest">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Investments</h1>
+          <p class="page-subtitle">Grow your wealth with smart investments</p>
+        </div><span class="portfolio-badge positive" style="font-size:16px;padding:8px 20px">Portfolio: +12.4% ↑</span>
+      </div>
+      <div class="summary-row">
+        <div class="summary-card" data-accent="primary"><span class="summary-label">Total Invested</span><span
+            class="summary-value">₹2,17,220</span><span class="summary-sub">Across all instruments</span></div>
+        <div class="summary-card" data-accent="success"><span class="summary-label">Current Value</span><span
+            class="summary-value credit">₹2,45,670</span><span class="summary-sub">Unrealised gains</span></div>
+        <div class="summary-card" data-accent="warning"><span class="summary-label">Total Returns</span><span
+            class="summary-value" style="color:var(--success)">+₹28,450</span><span class="summary-sub">XIRR:
+            14.2%</span></div>
+      </div>
+      <!-- Holdings - Square Cards -->
+      <h2 class="section-title">Your Holdings</h2>
+      <div class="holdings-grid" id="holdingsGrid">
+        <div class="holding-card" data-stock="reliance">
+          <div class="holding-card-header">
+            <div>
+              <div class="holding-name">Reliance Industries</div>
+              <div class="holding-shares">50 shares</div>
+            </div><span class="holding-change positive">+12.3%</span>
+          </div>
+          <div class="holding-price">₹1,250</div>
+          <div class="holding-sparkline" data-points="1180,1200,1190,1220,1240,1210,1250"></div>
+        </div>
+        <div class="holding-card" data-stock="tcs">
+          <div class="holding-card-header">
+            <div>
+              <div class="holding-name">TCS</div>
+              <div class="holding-shares">30 shares</div>
+            </div><span class="holding-change positive">+5.8%</span>
+          </div>
+          <div class="holding-price">₹1,917</div>
+          <div class="holding-sparkline" data-points="1850,1870,1860,1890,1900,1880,1917"></div>
+        </div>
+        <div class="holding-card" data-stock="axis">
+          <div class="holding-card-header">
+            <div>
+              <div class="holding-name">Axis Bluechip Fund</div>
+              <div class="holding-shares">SIP ₹5,000/mo</div>
+            </div><span class="holding-change positive">+18.2%</span>
+          </div>
+          <div class="holding-price">₹45,670</div>
+          <div class="holding-sparkline" data-points="38000,39500,41000,42300,43800,44500,45670"></div>
+        </div>
+        <div class="holding-card" data-stock="hdfc">
+          <div class="holding-card-header">
+            <div>
+              <div class="holding-name">HDFC Mid-Cap Fund</div>
+              <div class="holding-shares">SIP ₹3,000/mo</div>
+            </div><span class="holding-change positive">+14.5%</span>
+          </div>
+          <div class="holding-price">₹40,000</div>
+          <div class="holding-sparkline" data-points="34000,35500,36800,37500,38200,39100,40000"></div>
+        </div>
+        <div class="holding-card" data-stock="sgb">
+          <div class="holding-card-header">
+            <div>
+              <div class="holding-name">Sovereign Gold Bond</div>
+              <div class="holding-shares">10 grams</div>
+            </div><span class="holding-change positive">+18.7%</span>
+          </div>
+          <div class="holding-price">₹40,000</div>
+          <div class="holding-sparkline" data-points="33000,34200,35800,37000,38500,39200,40000"></div>
+        </div>
+      </div>
+      <!-- Explore - Square Cards -->
+      <h2 class="section-title" style="margin-top:40px">Explore Investments</h2>
+      <div class="explore-grid">
+        <div class="explore-card">
+          <div class="port-icon stocks"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2">
+              <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+            </svg></div>
+          <div class="explore-card-title">Direct Stocks</div>
+          <div class="explore-meta">
+            <div class="explore-meta-row"><span class="explore-meta-label">Market Cap</span><span
+                class="explore-meta-value">Large Cap</span></div>
+            <div class="explore-meta-row"><span class="explore-meta-label">Volume</span><span
+                class="explore-meta-value">12.5M</span></div>
+            <div class="explore-meta-row"><span class="explore-meta-label">P/E Ratio</span><span
+                class="explore-meta-value">28.4</span></div>
+          </div><span class="explore-risk-badge risk-medium">Medium Risk</span>
+        </div>
+        <div class="explore-card">
+          <div class="port-icon mutual"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M8 12h8M12 8v8" />
+            </svg></div>
+          <div class="explore-card-title">Mutual Funds</div>
+          <div class="explore-meta">
+            <div class="explore-meta-row"><span class="explore-meta-label">Min SIP</span><span
+                class="explore-meta-value">₹500</span></div>
+            <div class="explore-meta-row"><span class="explore-meta-label">Returns</span><span
+                class="explore-meta-value">12-18%</span></div>
+            <div class="explore-meta-row"><span class="explore-meta-label">Category</span><span
+                class="explore-meta-value">Equity</span></div>
+          </div><span class="explore-risk-badge risk-low">Low Risk</span>
+        </div>
+        <div class="explore-card">
+          <div class="port-icon gold"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+            </svg></div>
+          <div class="explore-card-title">Digital Gold</div>
+          <div class="explore-meta">
+            <div class="explore-meta-row"><span class="explore-meta-label">Price</span><span
+                class="explore-meta-value">₹6,200/g</span></div>
+            <div class="explore-meta-row"><span class="explore-meta-label">Purity</span><span
+                class="explore-meta-value">24K</span></div>
+            <div class="explore-meta-row"><span class="explore-meta-label">Min Buy</span><span
+                class="explore-meta-value">₹100</span></div>
+          </div><span class="explore-risk-badge risk-low">Low Risk</span>
+        </div>
+        <div class="explore-card">
+          <div class="port-icon" style="background:rgba(236,72,153,0.15);color:var(--pink)"><svg width="24" height="24"
+              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" />
+              <path d="M16 3v4M8 3v4M2 11h20" />
+            </svg></div>
+          <div class="explore-card-title">Fixed Deposits</div>
+          <div class="explore-meta">
+            <div class="explore-meta-row"><span class="explore-meta-label">Interest</span><span
+                class="explore-meta-value">Up to 7.5%</span></div>
+            <div class="explore-meta-row"><span class="explore-meta-label">Tenure</span><span
+                class="explore-meta-value">1-10 yrs</span></div>
+            <div class="explore-meta-row"><span class="explore-meta-label">Active</span><span
+                class="explore-meta-value">1 FD</span></div>
+          </div><span class="explore-risk-badge risk-low">No Risk</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ PAGE: LOANS ═══════ -->
+    <div class="page-section" data-page="loans">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Loans</h1>
+          <p class="page-subtitle">Manage your loans and apply for new ones</p>
+        </div>
+      </div>
+      <div class="summary-row">
+        <div class="summary-card" data-accent="primary"><span class="summary-label">Active Loans</span><span
+            class="summary-value">2</span><span class="summary-sub">Home + Personal Loan</span></div>
+        <div class="summary-card" data-accent="warning"><span class="summary-label">Total Outstanding</span><span
+            class="summary-value">₹18,50,000</span><span class="summary-sub">Combined balance</span></div>
+        <div class="summary-card" data-accent="success"><span class="summary-label">Next EMI Due</span><span
+            class="summary-value">₹22,450</span><span class="summary-sub">5 Mar, 2026</span></div>
+      </div>
+      <div class="analytics-grid">
+        <div class="analytics-card">
+          <h2 class="section-title">Active Loans</h2>
+          <div class="loan-cards">
+            <div class="loan-card">
+              <div class="loan-header">
+                <div class="port-icon" style="background:rgba(59,130,246,0.15);color:var(--electric-blue)"><svg
+                    width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg></div>
+                <div class="port-info"><span class="port-name">Home Loan</span><span class="port-val">Sanctioned:
+                    ₹25,00,000</span></div>
+              </div>
+              <div class="loan-details">
+                <div class="loan-detail-item"><span>Outstanding</span><span>₹16,00,000</span></div>
+                <div class="loan-detail-item"><span>EMI</span><span>₹18,750/mo</span></div>
+                <div class="loan-detail-item"><span>Interest Rate</span><span>8.5% p.a.</span></div>
+                <div class="loan-detail-item"><span>Tenure Left</span><span>12 yrs 3 mo</span></div>
+              </div>
+              <div class="loan-progress">
+                <div class="loan-progress-bar" style="width:36%"></div>
+              </div><span class="loan-progress-label">36% repaid</span>
+            </div>
+            <div class="loan-card">
+              <div class="loan-header">
+                <div class="port-icon" style="background:rgba(168,85,247,0.15);color:var(--purple)"><svg width="22"
+                    height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg></div>
+                <div class="port-info"><span class="port-name">Personal Loan</span><span class="port-val">Sanctioned:
+                    ₹5,00,000</span></div>
+              </div>
+              <div class="loan-details">
+                <div class="loan-detail-item"><span>Outstanding</span><span>₹2,50,000</span></div>
+                <div class="loan-detail-item"><span>EMI</span><span>₹3,700/mo</span></div>
+                <div class="loan-detail-item"><span>Interest Rate</span><span>11.5% p.a.</span></div>
+                <div class="loan-detail-item"><span>Tenure Left</span><span>2 yrs 1 mo</span></div>
+              </div>
+              <div class="loan-progress">
+                <div class="loan-progress-bar" style="width:50%;background:var(--gradient-warning)"></div>
+              </div><span class="loan-progress-label">50% repaid</span>
+            </div>
+          </div>
+        </div>
+        <div class="analytics-card">
+          <h2 class="section-title">Apply for a Loan</h2>
+          <div class="invest-explore-list">
+            <div class="invest-explore-item" data-loan-type="home" style="cursor:pointer">
+              <div class="port-icon" style="background:rgba(59,130,246,0.15);color:var(--electric-blue)"><svg width="20"
+                  height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                </svg></div>
+              <div class="port-info"><span class="port-name">Home Loan</span><span class="port-val">From 8.3%
+                  p.a.</span></div><button class="btn-secondary apply-loan-btn"
+                style="padding:6px 14px;font-size:12px">Apply</button>
+            </div>
+            <div class="invest-explore-item" data-loan-type="personal" style="cursor:pointer">
+              <div class="port-icon" style="background:rgba(168,85,247,0.15);color:var(--purple)"><svg width="20"
+                  height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg></div>
+              <div class="port-info"><span class="port-name">Personal Loan</span><span class="port-val">From 10.5%
+                  p.a.</span></div><button class="btn-secondary apply-loan-btn"
+                style="padding:6px 14px;font-size:12px">Apply</button>
+            </div>
+            <div class="invest-explore-item" data-loan-type="car" style="cursor:pointer">
+              <div class="port-icon" style="background:rgba(16,185,129,0.15);color:var(--success)"><svg width="20"
+                  height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="4" width="22" height="16" rx="2" />
+                  <line x1="1" y1="10" x2="23" y2="10" />
+                </svg></div>
+              <div class="port-info"><span class="port-name">Car Loan</span><span class="port-val">From 9.0% p.a.</span>
+              </div><button class="btn-secondary apply-loan-btn" style="padding:6px 14px;font-size:12px">Apply</button>
+            </div>
+            <div class="invest-explore-item" data-loan-type="education" style="cursor:pointer">
+              <div class="port-icon" style="background:rgba(245,158,11,0.15);color:var(--warning)"><svg width="20"
+                  height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                </svg></div>
+              <div class="port-info"><span class="port-name">Education Loan</span><span class="port-val">From 7.5%
+                  p.a.</span></div><button class="btn-secondary apply-loan-btn"
+                style="padding:6px 14px;font-size:12px">Apply</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ PAGE: BILLS ═══════ -->
+    <div class="page-section" data-page="bills">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Bill Payments</h1>
+          <p class="page-subtitle">Pay bills, set up auto-pay, and track your payments</p>
+        </div>
+      </div>
+      <div class="summary-row">
+        <div class="summary-card" data-accent="danger"><span class="summary-label">Due Soon</span><span
+            class="summary-value debit">3 Bills</span><span class="summary-sub">Total: ₹4,380</span></div>
+        <div class="summary-card" data-accent="success"><span class="summary-label">Paid This Month</span><span
+            class="summary-value credit">₹6,240</span><span class="summary-sub">5 bills cleared</span></div>
+        <div class="summary-card" data-accent="primary"><span class="summary-label">Auto-Pay Active</span><span
+            class="summary-value">4</span><span class="summary-sub">Set up mandates</span></div>
+      </div>
+      <div class="analytics-grid">
+        <div class="analytics-card">
+          <h2 class="section-title">Upcoming Bills</h2>
+          <div class="bills-list">
+            <div class="bill-item due-soon">
+              <div class="bill-icon">⚡</div>
+              <div class="port-info"><span class="port-name">Electricity — Tata Power</span><span class="port-val">Due:
+                  5 Mar 2026</span></div>
+              <div class="bill-right"><span class="bill-amount">₹1,540</span><button class="btn-primary"
+                  style="padding:6px 16px;font-size:12px">Pay</button></div>
+            </div>
+            <div class="bill-item due-soon">
+              <div class="bill-icon">📶</div>
+              <div class="port-info"><span class="port-name">Internet — Airtel Fiber</span><span class="port-val">Due: 8
+                  Mar 2026</span></div>
+              <div class="bill-right"><span class="bill-amount">₹999</span><button class="btn-primary"
+                  style="padding:6px 16px;font-size:12px">Pay</button></div>
+            </div>
+            <div class="bill-item due-soon">
+              <div class="bill-icon">💧</div>
+              <div class="port-info"><span class="port-name">Water — Municipal Corp</span><span class="port-val">Due: 10
+                  Mar 2026</span></div>
+              <div class="bill-right"><span class="bill-amount">₹1,841</span><button class="btn-primary"
+                  style="padding:6px 16px;font-size:12px">Pay</button></div>
+            </div>
+            <div class="bill-item">
+              <div class="bill-icon">🔥</div>
+              <div class="port-info"><span class="port-name">Gas — Indraprastha Gas</span><span class="port-val">Due: 15
+                  Mar 2026</span></div>
+              <div class="bill-right"><span class="bill-amount">₹680</span><button class="btn-secondary"
+                  style="padding:6px 14px;font-size:12px">Pay</button></div>
+            </div>
+            <div class="bill-item">
+              <div class="bill-icon">📺</div>
+              <div class="port-info"><span class="port-name">DTH — Tata Play</span><span class="port-val">Due: 20 Mar
+                  2026</span></div>
+              <div class="bill-right"><span class="bill-amount">₹450</span><button class="btn-secondary"
+                  style="padding:6px 14px;font-size:12px">Pay</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-card-header">
+            <h2 class="section-title">Payment History</h2><span class="portfolio-badge positive">All Paid ✓</span>
+          </div>
+          <div class="transactions-list">
+            <div class="txn-item">
+              <div class="txn-icon txn-debit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg></div>
+              <div class="txn-info"><span class="txn-name">Electricity — Tata Power</span><span class="txn-date">22 Feb
+                  2026 • Auto-Pay</span></div><span class="txn-amount debit">-₹1,240</span>
+            </div>
+            <div class="txn-item">
+              <div class="txn-icon txn-debit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg></div>
+              <div class="txn-info"><span class="txn-name">Internet — Airtel Fiber</span><span class="txn-date">18 Feb
+                  2026 • Auto-Pay</span></div><span class="txn-amount debit">-₹999</span>
+            </div>
+            <div class="txn-item">
+              <div class="txn-icon txn-debit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg></div>
+              <div class="txn-info"><span class="txn-name">Jio Recharge — Prepaid</span><span class="txn-date">20 Feb
+                  2026 • Manual</span></div><span class="txn-amount debit">-₹299</span>
+            </div>
+            <div class="txn-item">
+              <div class="txn-icon txn-debit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg></div>
+              <div class="txn-info"><span class="txn-name">Netflix Subscription</span><span class="txn-date">23 Feb 2026
+                  • Auto-Pay</span></div><span class="txn-amount debit">-₹649</span>
+            </div>
+            <div class="txn-item">
+              <div class="txn-icon txn-debit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg></div>
+              <div class="txn-info"><span class="txn-name">Water — Municipal Corp</span><span class="txn-date">15 Feb
+                  2026 • Manual</span></div><span class="txn-amount debit">-₹1,640</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ PAGE: ASSISTANT ═══════ -->
+    <div class="page-section" data-page="assistant">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Zobot Assistant & Markets</h1>
+          <p class="page-subtitle">Your personal AI financial advisor + Live Markets</p>
+        </div>
+      </div>
+      <div class="assistant-wrapper">
+        <div class="assistant-container">
+          <div class="chatbot-messages" id="chatbotMessagesFullScreen">
+            <div class="chat-msg bot">
+              <p data-i18n="bot_greeting">Hi Akshay! 💚 I'm Zobot, your personal financial assistant. How can I help you today?</p>
+              <span class="chat-time">Just now</span>
+            </div>
+          </div>
+          <div class="chatbot-input-area">
+            <div class="chat-lang-switcher">
+              <span class="chat-lang-label">Chat Language:</span>
+              <button class="chat-lang-btn active" data-lang="en">English</button>
+              <button class="chat-lang-btn" data-lang="hi">हिंदी</button>
+              <button class="chat-lang-btn" data-lang="te">తెలుగు</button>
+              <button class="chat-lang-btn" data-lang="bi">Bilingual</button>
+            </div>
+            <div class="chat-input-row">
+              <textarea placeholder="Ask me anything..." data-i18n-attr="placeholder:chat_placeholder"
+                id="chatInputFullScreen"></textarea>
+              <button class="btn-primary chat-send-btn" id="chatSendFullScreen">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+                <span>Send</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="tabular-summary-container" id="tabularSummaryContainer">
+          <div class="summary-header">
+            <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--electric-blue)"
+                stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="9" y1="21" x2="9" y2="9"></line>
+              </svg>Dynamic Data View</h3>
+            <p>AI summarized table will appear here.</p>
+          </div>
+          <div class="summary-body" id="tabularSummaryBody">
+            <div class="summary-placeholder">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
+                style="opacity:0.5">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+              </svg>
+              <span>Ask a question to generate a table</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ══════════════ MODALS ══════════════ -->
+  <!-- TRANSFER MODAL -->
+  <div class="modal-overlay" id="transferModal">
+    <div class="modal transfer-modal">
+      <div class="modal-header">
+        <h3>Transfer Money</h3><button class="modal-close" data-close="transferModal"
+          aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group" style="margin-bottom:20px"><label>Select Recipient Bank</label><select
+            id="transferBankSelect"
+            style="width:100%;padding:14px 16px;background:rgba(0,0,0,0.3);border:1px solid var(--border-light);border-radius:12px;color:var(--text-primary);font-size:15px;outline:none">
+            <option value="" disabled selected>-- Choose a Bank --</option>
+            <option value="sbi">State Bank of India (SBI)</option>
+            <option value="hdfc">HDFC Bank</option>
+            <option value="icici">ICICI Bank</option>
+            <option value="axis">Axis Bank</option>
+            <option value="kotak">Kotak Mahindra Bank</option>
+          </select></div>
+        <div class="modal-form">
+          <div class="form-group"><label>Account Number</label><input type="text" placeholder="Enter account number"
+              id="transferAcct" /></div>
+          <div class="form-group"><label>IFSC Code</label><input type="text" placeholder="e.g. SBIN0001234"
+              id="transferIfsc" /></div>
+          <div class="form-group"><label>Amount (₹)</label><input type="number" placeholder="5,000" id="transferAmount"
+              value="5000" /></div>
+          <div class="transfer-method"><button class="method-chip active">UPI</button><button
+              class="method-chip">NEFT</button><button class="method-chip">IMPS</button><button
+              class="method-chip">RTGS</button></div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn-primary" id="transferSubmit">Transfer ₹5,000</button></div>
+    </div>
+  </div>
+
+  <!-- BILL PAYMENT MODAL -->
+  <div class="modal-overlay" id="billModal">
+    <div class="modal bill-modal">
+      <div class="modal-header">
+        <h3>Pay Bills</h3><button class="modal-close" data-close="billModal" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="bill-categories"><button class="bill-cat active" data-bill="electricity">⚡
+            Electricity</button><button class="bill-cat" data-bill="water">💧 Water</button><button class="bill-cat"
+            data-bill="internet">📶 Internet</button><button class="bill-cat" data-bill="gas">🔥 Gas</button></div>
+        <div class="modal-form">
+          <div class="form-group"><label>Consumer Number</label><input type="text"
+              placeholder="Enter consumer number" /></div>
+          <div class="form-group"><label>Amount (₹)</label><input type="number" placeholder="1,240" value="1240" />
+          </div>
+          <button class="btn-secondary" id="fetchBill">Fetch Bill Details</button>
+          <div class="bill-details" id="billDetails" style="display:none">
+            <div class="bill-detail-row"><span>Provider</span><span>Tata Power</span></div>
+            <div class="bill-detail-row"><span>Bill Period</span><span>Jan 2026</span></div>
+            <div class="bill-detail-row"><span>Due Date</span><span>15 Mar 2026</span></div>
+            <div class="bill-detail-row total"><span>Amount</span><span>₹1,240</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn-primary">Pay Now ₹1,240</button></div>
+    </div>
+  </div>
+
+  <!-- LOAN APPLY & EMI CALCULATOR MODAL -->
+  <div class="modal-overlay" id="applyLoanModal">
+    <div class="modal loan-modal">
+      <div class="modal-header">
+        <h3 data-i18n="loan_apply_title">Apply for Loan & EMI Calculator</h3><button class="modal-close"
+          data-close="applyLoanModal" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="loan-info-side">
+          <h4>Home Loan Eligibility</h4>
+          <ul class="loan-info-list">
+            <li>✅ <strong>Interest Rate:</strong> Starting from 8.3% p.a.</li>
+            <li>✅ <strong>Max Tenure:</strong> Up to 30 years</li>
+            <li>✅ <strong>Processing Fee:</strong> Zero processing fee for approval</li>
+            <li>✅ <strong>Documents:</strong> Salary slip, PAN, Aadhar, Bank statement</li>
+          </ul>
+          <div class="loan-preapproved">
+            <p>🎉 Pre-approved limit for you: <strong>₹45,00,000</strong></p>
+          </div>
+        </div>
+        <div class="loan-calc-side">
+          <h4 style="margin-top:0;color:var(--text-primary);margin-bottom:16px">EMI Calculator</h4>
+          <div class="form-group" style="margin-bottom:16px"><label>Loan Amount (₹)</label><input type="number"
+              id="emiAmount" value="2500000" /></div>
+          <div class="form-group" style="margin-bottom:16px"><label>Interest Rate (% p.a.)</label><input type="number"
+              step="0.1" id="emiRate" value="8.5" /></div>
+          <div class="form-group" style="margin-bottom:24px"><label>Tenure (Years)</label><input type="number"
+              id="emiTenure" value="20" /></div>
+          <div class="emi-results">
+            <div class="emi-row"><span class="emi-label">Monthly EMI</span><strong class="emi-value big"
+                id="emiResultResult">₹21,695</strong></div>
+            <div class="emi-row"><span class="emi-label">Total Interest Payable</span><span class="emi-value"
+                id="emiResultInterest">₹27,06,864</span></div>
+            <div class="emi-row"><span class="emi-label">Total Payment</span><span class="emi-value"
+                id="emiResultTotal">₹52,06,864</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn-primary" style="padding:12px 24px;font-size:16px">Proceed with
+          Application</button></div>
+    </div>
+  </div>
+
+  <!-- NOTIFICATION PANEL -->
+  <div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+      <h3>Notifications</h3><button class="btn-text" id="markAllRead">Mark all read</button>
+    </div>
+    <div class="notif-list">
+      <div class="notif-item unread" data-notif="1">
+        <div class="notif-dot"></div>
+        <div class="notif-content"><span class="notif-title">Amazon Shopping</span><span class="notif-desc">₹2,499
+            debited from your account</span><span class="notif-time">2 min ago</span></div>
+      </div>
+      <div class="notif-item unread" data-notif="2">
+        <div class="notif-dot"></div>
+        <div class="notif-content"><span class="notif-title">Portfolio Update</span><span class="notif-desc">Your
+            portfolio gained +2.1% today</span><span class="notif-time">1 hour ago</span></div>
+      </div>
+      <div class="notif-item unread" data-notif="3">
+        <div class="notif-dot"></div>
+        <div class="notif-content"><span class="notif-title">Salary Credit</span><span class="notif-desc">₹85,000
+            credited from TCS Ltd</span><span class="notif-time">Yesterday</span></div>
+      </div>
+      <div class="notif-item" data-notif="4">
+        <div class="notif-dot"></div>
+        <div class="notif-content"><span class="notif-title">Bill Reminder</span><span class="notif-desc">Electricity
+            bill due in 5 days</span><span class="notif-time">2 days ago</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ FLOATING TRADING WINDOW ══════════════ -->
+  <div class="trading-floating-widget" id="tradingFloatingWidget">
+    <div class="tf-header" id="tfHeader">
+      <div class="tf-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+        <span data-i18n="trade_terminal">Live Trading</span>
+      </div>
+      <div class="tf-controls">
+        <select class="tf-lang-select" id="tfLangSelect">
+          <option value="en">EN</option>
+          <option value="hi">HI</option>
+          <option value="te">TE</option>
+          <option value="bi">BI</option>
+        </select>
+        <button class="tf-toggle" id="tfToggle" aria-label="Toggle Window"><svg width="18" height="18"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg></button>
+      </div>
+    </div>
+    <div class="tf-body" id="tfBody">
+      <div class="tf-chart-area">
+        <div class="tradingview-widget-container" style="height:100%;width:100%">
+          <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%"></div>
+          <script type="text/javascript"
+            src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js"
+            async>{ "symbol": "BSE:RELIANCE", "width": "100%", "height": "100%", "locale": "in", "dateRange": "1M", "colorTheme": "dark", "isTransparent": true, "autosize": true, "largeChartUrl": "" }</script>
+        </div>
+      </div>
+      <div class="tf-timeframes">
+        <button class="tf-tf-btn active" data-i18n="tf_1d">1D</button>
+        <button class="tf-tf-btn" data-i18n="tf_1w">1W</button>
+        <button class="tf-tf-btn" data-i18n="tf_1m">1M</button>
+        <button class="tf-tf-btn" data-i18n="tf_1y">1Y</button>
+      </div>
+      <div class="tf-actions">
+        <button class="btn-primary tf-action-buy" data-i18n="trade_buy">Buy</button>
+        <button class="btn-secondary tf-action-sell" data-i18n="trade_sell">Sell</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stock Detail Panel (slide-in) -->
+  <div class="stock-detail-panel" id="stockDetailPanel">
+    <button class="stock-detail-close" id="stockDetailClose">&times;</button>
+    <div id="stockDetailContent"></div>
+  </div>
+
+  <script src="api.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
